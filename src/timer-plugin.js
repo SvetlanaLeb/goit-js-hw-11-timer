@@ -1,19 +1,14 @@
 import './css/common.css';
 
-const refs = {
-    daysText : document.querySelector('span[data-value="days"]'),
-    hoursText : document.querySelector('span[data-value="hours"]'),
-    minsText : document.querySelector('span[data-value="mins"]'),
-    secsText : document.querySelector('span[data-value="secs"]'),
-}
+
 
 class CountdownTimer {
 
-    constructor({ selector, targetDate, onTick } ) {
-        this.onTick = onTick;
+    constructor({ selector, targetDate} ) {
+      
         this.targetDate = targetDate;
         this.selector = selector;
-       
+
     }
     start() {
         const targetDate = this.targetDate;
@@ -23,7 +18,7 @@ class CountdownTimer {
             const deltaTime = targetDate - startTime;
             const time = this.getTimeComponents(deltaTime);
 
-            this.onTick(time);
+            this.updateClockFace(time);
         }, 1000)
     }
     getTimeComponents(time) {
@@ -38,25 +33,38 @@ class CountdownTimer {
     pad(value) {
         return String(value).padStart(2, '0');
     };
+
+    selectTimerByID() {
+        const selector = this.selector;
+        const  refs = {
+            daysText: document.querySelector(`${selector} span[data-value="days"]`),
+            hoursText: document.querySelector(`${selector} span[data-value="hours"]`),
+            minsText: document.querySelector(`${selector} span[data-value="mins"]`),
+            secsText: document.querySelector(`${selector} span[data-value="secs"]`),
+        };
+        return refs
+    };
+    updateClockFace({ days, hours, mins, secs }) {
+    const refs = this.selectTimerByID();
+        
+    refs.daysText.textContent = `${days}`;
+    refs.hoursText.textContent = `${hours}`;
+    refs.minsText.textContent = `${mins}`;
+    refs.secsText.textContent = `${secs}`;
     
+    };
     
 };
 
 const countdownTimer = new CountdownTimer({
     selector: '#timer-1',
     targetDate: new Date('Jul 19, 2021'),
-    onTick: updateClockFace,
 });
 
 
 countdownTimer.start();
 
-function updateClockFace({ days, hours, mins, secs }) {
-    refs.daysText.textContent = `${days}`;
-    refs.hoursText.textContent = `${hours}`;
-    refs.minsText.textContent = `${mins}`;
-    refs.secsText.textContent = `${secs}`;
-};
+
 
 
 
